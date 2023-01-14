@@ -47,10 +47,12 @@ false
 //3 + -2
 //3 -2
 
+//-------------------------------------------------------------------//
+// ----------------Type aliasses and notation------------------------//
+//-------------------------------------------------------------------//
 
 
-
-type T1 = int
+type T1 = int // T1 is a type abbreviation or alias
 type T2 = int
 typeof<T1> = typeof<T2>
 
@@ -67,13 +69,13 @@ typeof<T1> = typeof<T2>
 [[]]
 [[[3]]]
 
-type T3 = int list  // T3 is a type abbreviation (or alias)
-type T4 = List<int>
+type T3 = int list  // ML-style notation
+type T4 = List<int> // .NET-style notation
 
 typeof<T3> = typeof<T4>
 
-type T5<'a> = List<'a->'a>
-type T6<'T> = ('T -> 'T) list
+type T5<'a> = List<'a->'a> // .Net-style notation
+type T6<'T> = ('T -> 'T) list // ML-style notation
 
 typeof<T5<'x>> = typeof<T6<'y>>
 typeof<T5<'T>> = typeof<List<'a -> 'a>>
@@ -95,32 +97,40 @@ typeof<uint32>= typeof<int32>
 
 // tuples are like records without field names.
 
+// fst selcts component of 2-tuple
 fst (1,2)
 
-(fun (a,_,_) -> a)("yes",1,())
+// function to select component of 3-tuple
+(fun (a,_,_) -> a)("yes",1,()) // also see later
 
-// functions
 
+//------------------------------------------------------------------------------//
+//---------------------------functions------------------------------------------//
+//------------------------------------------------------------------------------//
 fun n -> n + 1
 
 let thunk() = printfn "Hello!" // use unit is parameter type if "no parameters"
 thunk() // this looks like C++ but is actually different!
 
+// () is a value - the ONLY value in the Unit type (unit is an alias for Unit).
 let anotherThunk() =
     let arg = ()
     thunk arg
 
 anotherThunk()
 
-
+// function definition
 let addOne n = n + 1
 
+// equivalent function definition
 let addOne' = fun n -> n + 1
 
 addOne 10 |> printfn "%d"
 
+// brackets can be used anywhere - for grouping - they are not needed here
 addOne (10) |> printfn "%d"
 
+// this works because () is the ONLY value of type unit
 fun () -> 10
 
 fun n -> printfn "%A" n
@@ -180,8 +190,9 @@ fail()
 
 let stringToInt (x:string) = String.length x
 
-
-// higher order functions
+//-----------------------------------------------------------------------//
+// ------------------------higher order functions------------------------//
+//-----------------------------------------------------------------------//
 
 let twice f x = f (f x)
 let twice' f = fun x -> f (f x)
@@ -193,15 +204,19 @@ twice (fun x -> x + 10) 11
 twice twice 1
 let p = twice twice (fun n -> n+1)
 let q = twice twice twice (fun n -> n+1)
+let q' = twice twice twice ((*) 2) // (*) 2 alt notation for fun n -> n*2
 
 p 0
 p 1
 q 0
 q 1
+q' 0
+q' 1
 
-let f g h x = (g x) (h x)
+let S g h x = (g x) (h x) // this is actually the S combinator (non-examinable)
 
-let unify a b =
+// How are types inferred?
+let unifyExample a b =
     ()
     //a b |> ignore
     //b + 1.0 |> ignore
